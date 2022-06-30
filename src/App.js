@@ -1,10 +1,14 @@
-import { useEffect, useRef, useState } from 'react'
+//@ts-check
+import React, { useEffect, useRef, useState } from 'react'
 import './App.css'
 
 import Config from './config'
 import * as Chat from './chat'
 
-const chat = Chat.room(Config.ROOM_ID)
+import Message from './components/Message'
+import MessageInput from './components/MessageInput'
+
+const chat = Chat.room(Config.ROOM_ID, Config.username)
 
 function App() {
   const [messages, setMessages] = useState([])
@@ -25,7 +29,7 @@ function App() {
         }} />
       </header>
     </div>
-  );
+  )
 }
 function Messages(props) {
   const messagesEndRef = useRef(null)
@@ -35,20 +39,10 @@ function Messages(props) {
   }, [props.messages])
   return (
     <div className="u-Messages">
-      {props.messages.map(msg => (<pre key={'k-' + msg.index}>{JSON.stringify(msg, null, 2)}</pre>))}
+      {props.messages.map(Message)}
       <div style={{ float: "left", clear: "both" }} ref={messagesEndRef}></div>
     </div>
   )
 }
-function MessageInput(props) {
-  const [inputText, setInputText] = useState('')
-  return <input value={inputText} onChange={ev => {
-    setInputText(ev.target.value)
-  }} onKeyDown={ev => {
-    if (ev.key !== 'Enter') return
-    props.onMessage(inputText)
-    setInputText('')
-  }} />
-}
 
-export default App;
+export default App

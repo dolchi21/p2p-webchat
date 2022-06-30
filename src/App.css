@@ -22,6 +22,9 @@
   max-height: 80vh;
   overflow: auto;
 }
+.u-Messages .u-self {
+  text-align: right;
+}
 
 .App-link {
   color: #61dafb;

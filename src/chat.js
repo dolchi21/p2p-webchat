@@ -1,21 +1,27 @@
-
 import sha256 from 'crypto-js/sha256'
 import * as GUN from './gun'
 
-export const room = (roomId, username = Math.random()) => {
+export const room = (roomId, username) => {
+    const state = { username }
     const gun = GUN.client()
     const chatRoom = gun.get('p2p-webchat').get(roomId)
     let latestMessage
     chatRoom.on(value => {
-        const data = JSON.parse(value)
-        latestMessage = data
+        try {
+            const data = JSON.parse(value)
+            if (data.type === 'MESSAGE') latestMessage = data
+        } catch (err) {
+            debugger
+        }
     })
     return {
         gun,
         chatRoom,
+        username: val => state.username = val,
         postMessage(message) {
             const data = {
-                username,
+                type: 'MESSAGE',
+                username: state.username,
                 message
             }
             if (latestMessage) {
@@ -26,8 +32,7 @@ export const room = (roomId, username = Math.random()) => {
             const hash = sha256(JSON.stringify(data)).toString()
             const str = JSON.stringify({
                 ...data,
-                hash,
-                type: 'MESSAGE'
+                hash
             })
             chatRoom.put(str)
         }
