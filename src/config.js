@@ -9,7 +9,8 @@ const params = QueryString.parse(window.location.search)
 
 const opts = {
     username: params.username || generateRandomUsername(),
-    ROOM_ID: params.roomId || 'test'
+    ROOM_ID: params.roomId || 'test',
+    USER_SECRET: params.secret
 }
 
 export default opts

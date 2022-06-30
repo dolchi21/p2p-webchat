@@ -1,6 +1,8 @@
 import sha256 from 'crypto-js/sha256'
 import * as GUN from './gun'
 
+import Config from './config'
+
 export const room = (roomId, username) => {
     const state = { username }
     const gun = GUN.client()
@@ -29,7 +31,8 @@ export const room = (roomId, username) => {
                 data.index = latestMessage.index + 1
                 if (!latestMessage.index) data.index = 1
             }
-            const hash = sha256(JSON.stringify(data)).toString()
+            const data2hash = [JSON.stringify(data), Config.USER_SECRET].filter(e => e).join()
+            const hash = sha256(data2hash).toString()
             const str = JSON.stringify({
                 ...data,
                 hash
